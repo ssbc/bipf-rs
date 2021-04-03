@@ -1,0 +1,5 @@
+# bipf-rs
+
+Rust implementation of the Binary In-Place Format.
+
+JavaScript implementation: https://github.com/ssbc/bipf
