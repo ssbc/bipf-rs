@@ -1,6 +1,6 @@
 # bipf-rs
 
-:japanese_goblin: **[ Work-in-progress ]** :japanese_goblin:
+## :japanese_goblin: **[ Work-in-progress ]** :japanese_goblin:
 
 Rust implementation of the Binary In-Place Format.
 
@@ -23,7 +23,7 @@ EXTENDED: 7  // custom type
 
 ## Tests
 
-Run all test:
+Run all tests:
 
 `cargo test`
 
