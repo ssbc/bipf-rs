@@ -15,8 +15,8 @@ const RESERVED: u8 = 7;     // 111 - custom type. specific type should be indica
 // const TAG_SIZE: u8 = 3;
 // const TAG_MASK: u8 = 7;
 
-/// A representation of all data types which can be encoded and decoded using the Binary In-Place Format (BIPF). Each type has an associated type tag.
-pub enum Type {
+/// A representation of all field data types which can be encoded and decoded using the Binary In-Place Format (BIPF). Each type has an associated type tag.
+pub enum FieldType {
     String = 0,   // String (UTF-8)
     Buffer = 1,   // Vec<u8>
     Integer = 2,  // i32
@@ -30,55 +30,55 @@ pub enum Type {
 /// The `Value` trait enables functions to be written with generic type signatures which
 /// allow all valid data types, as defined by the BIPF specification.
 trait Value {
-    fn to_type(&self) -> Type;
+    fn to_type(&self) -> FieldType;
 }
 
 // 0 - string
 impl Value for String {
-    fn to_type(&self) -> Type {
-        Type::String
+    fn to_type(&self) -> FieldType {
+        FieldType::String
     }
 }
 
 // 1 - buffer
 impl Value for Vec<u8> {
-    fn to_type(&self) -> Type {
-        Type::Buffer
+    fn to_type(&self) -> FieldType {
+        FieldType::Buffer
     }
 }
 
 // 2 - integer
 impl Value for i32 {
-    fn to_type(&self) -> Type {
-        Type::Integer
+    fn to_type(&self) -> FieldType {
+        FieldType::Integer
     }
 }
 
 // 3 - double
 impl Value for f64 {
-    fn to_type(&self) -> Type {
-        Type::Double
+    fn to_type(&self) -> FieldType {
+        FieldType::Double
     }
 }
 
 // 4 - array
 impl<T> Value for [T] {
-    fn to_type(&self) -> Type {
-        Type::Array
+    fn to_type(&self) -> FieldType {
+        FieldType::Array
     }
 }
 
 // 5 - object
 impl<K, V> Value for HashMap<K, V> {
-    fn to_type(&self) -> Type {
-        Type::Object
+    fn to_type(&self) -> FieldType {
+        FieldType::Object
     }
 }
 
 // 6 - boolnull
 impl Value for Option<bool> {
-    fn to_type(&self) -> Type {
-        Type::Boolnull
+    fn to_type(&self) -> FieldType {
+        FieldType::Boolnull
     }
 }
 
@@ -91,7 +91,7 @@ mod tests {
 
     #[test]
     fn get_string_type_int() {
-        let i = Type::String as i32;
+        let i = FieldType::String as i32;
         assert_eq!(i, 0);
     }
 
@@ -100,14 +100,14 @@ mod tests {
         let s = "this is a string".to_string();
         let t = s.to_type();
         match t {
-            Type::String => Ok(()),
+            FieldType::String => Ok(()),
             _ => Err(String::from("type is not a string")),
         }
     }
 
     #[test]
     fn get_buffer_type_int() {
-        let i = Type::Buffer as i32;
+        let i = FieldType::Buffer as i32;
         assert_eq!(i, 1);
     }
 
@@ -116,14 +116,14 @@ mod tests {
         let b = vec![0; 5];
         let t = b.to_type();
         match t {
-            Type::Buffer => Ok(()),
+            FieldType::Buffer => Ok(()),
             _ => Err(String::from("type is not a buffer (vector)")),
         }
     }
 
     #[test]
     fn get_integer_type_int() {
-        let i = Type::Integer as i32;
+        let i = FieldType::Integer as i32;
         assert_eq!(i, 2);
     }
 
@@ -132,14 +132,14 @@ mod tests {
         let i = 0;
         let t = i.to_type();
         match t {
-            Type::Integer => Ok(()),
+            FieldType::Integer => Ok(()),
             _ => Err(String::from("type is not an integer")),
         }
     }
 
     #[test]
     fn get_double_type_int() {
-        let d = Type::Double as i32;
+        let d = FieldType::Double as i32;
         assert_eq!(d, 3);
     }
 
@@ -148,14 +148,14 @@ mod tests {
         let d = 1.0;
         let t = d.to_type();
         match t {
-            Type::Double => Ok(()),
+            FieldType::Double => Ok(()),
             _ => Err(String::from("type is not a double (f64)")),
         }
     }
 
     #[test]
     fn get_array_type_int() {
-        let a = Type::Array as i32;
+        let a = FieldType::Array as i32;
         assert_eq!(a, 4);
     }
 
@@ -165,7 +165,7 @@ mod tests {
         let a: [u8; 5] = [0, 0, 0, 0, 0];
         let t = a.to_type();
         match t {
-            Type::Array => Ok(()),
+            FieldType::Array => Ok(()),
             _ => Err(String::from("type is not an array")),
         }
     }
@@ -175,14 +175,14 @@ mod tests {
         let a = ["kyanite", "galactic", "mycelium"];
         let t = a.to_type();
         match t {
-            Type::Array => Ok(()),
+            FieldType::Array => Ok(()),
             _ => Err(String::from("type is not an array")),
         }
     }
 
     #[test]
     fn get_object_type_int() {
-        let o = Type::Object as i32;
+        let o = FieldType::Object as i32;
         assert_eq!(o, 5);
     }
 
@@ -193,14 +193,14 @@ mod tests {
         hm.insert("second".to_string(), 50);
         let t = hm.to_type();
         match t {
-            Type::Object => Ok(()),
+            FieldType::Object => Ok(()),
             _ => Err(String::from("type is not an object (hashmap)")),
         }
     }
 
     #[test]
     fn get_boolnull_type_int() {
-        let b = Type::Boolnull as i32;
+        let b = FieldType::Boolnull as i32;
         assert_eq!(b, 6);
     }
 
@@ -209,7 +209,7 @@ mod tests {
         let os = Some(true);
         let t = os.to_type();
         match t {
-            Type::Boolnull => Ok(()),
+            FieldType::Boolnull => Ok(()),
             _ => Err(String::from("type is not a boolnull (option<bool>)")),
         }
     }
@@ -219,7 +219,7 @@ mod tests {
         let on = None;
         let t = on.to_type();
         match t {
-            Type::Boolnull => Ok(()),
+            FieldType::Boolnull => Ok(()),
             _ => Err(String::from("type is not a boolnull (option<bool>)")),
         }
     }
