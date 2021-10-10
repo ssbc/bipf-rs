@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2021 Andrew 'glyph' Reid
+
+SPDX-License-Identifier: CC0-1.0
+-->
+
 # bipf-rs
 
 :japanese_goblin: **[ Work-in-progress ]** :japanese_goblin:
